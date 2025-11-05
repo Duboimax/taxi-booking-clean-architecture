@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: taxi-booking-db
+    environment:
+      POSTGRES_DB: taxi_booking
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - taxi-network
+
+networks:
+  taxi-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
