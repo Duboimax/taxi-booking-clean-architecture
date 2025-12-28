@@ -1,63 +1,36 @@
 package com.taxibooking.controllers;
 
-import com.taxibooking.models.Taxi;
-import com.taxibooking.repositories.TaxiRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.taxibooking.dto.TaxiDto;
+import com.taxibooking.services.TaxiService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/taxis")
+@RequestMapping("/api/taxis")
+@RequiredArgsConstructor
 public class TaxiRestController {
 
-    @Autowired
-    private TaxiRepository taxiRepository;
+    private final TaxiService taxiService;
 
     @GetMapping("/available")
-    public ResponseEntity<?> getAvailableTaxis() {
-        var taxis = taxiRepository.findByStatus("available");
-
-        if (taxis.isEmpty()) {
-            return ResponseEntity.ok("No taxis available");
-        }
-
-        return ResponseEntity.ok(taxis);
+    public ResponseEntity<List<TaxiDto>> getAvailableTaxis() {
+        List<TaxiDto> availableTaxis = taxiService.getAvailableTaxis();
+        return ResponseEntity.ok(availableTaxis);
     }
 
     @PostMapping
-    public ResponseEntity<?> addTaxi(@RequestBody Taxi t) {
-
-        if (t.getName() == null || t.getName().equals("")) {
-            return ResponseEntity.badRequest().body("Name is required");
-        }
-
-        t.setStatus("available");
-        t.setCreated(new Date());
-
-        if (t.getPrice() == null) {
-            t.setPrice(15.0);
-        }
-
-        Taxi saved = taxiRepository.save(t);
-
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<TaxiDto> createTaxi(@RequestBody TaxiDto taxiDto) {
+        TaxiDto created = taxiService.createTaxi(taxiDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PostMapping("/release/{id}")
-    public ResponseEntity<?> releaseTaxi(@PathVariable Long id) {
-        var taxiOpt = taxiRepository.findById(id);
-
-        if (!taxiOpt.isPresent()) {
-            return ResponseEntity.badRequest().body("not found");
-        }
-
-        Taxi t = taxiOpt.get();
-
-        t.setStatus("available");
-        taxiRepository.save(t);
-
-        return ResponseEntity.ok("Taxi released");
+    public ResponseEntity<Void> releaseTaxi(@PathVariable Long id) {
+        taxiService.releaseTaxi(id);
+        return ResponseEntity.ok().build();
     }
 }
