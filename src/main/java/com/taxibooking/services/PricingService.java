@@ -1,28 +1,40 @@
 package com.taxibooking.services;
 
+import com.taxibooking.pricing.PriceCalculator;
+import com.taxibooking.pricing.Ride;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
-import static com.taxibooking.config.PricingConstants.*;
-
 @Service
+@RequiredArgsConstructor
 public class PricingService {
 
+    private final PriceCalculator priceCalculator;
+
+    public double calculatePrice(double distanceKm, int durationMinutes, Date pickupTime,
+                                 boolean fromAirport, boolean toAirport) {
+        LocalDateTime pickupDateTime = convertToLocalDateTime(pickupTime);
+
+        Ride ride = new Ride(distanceKm, durationMinutes, pickupDateTime, fromAirport, toAirport);
+
+        return priceCalculator.calculate(ride);
+    }
+
+    @Deprecated
     public double calculatePrice(double basePrice, Date pickupTime) {
-        if (isNightTime(pickupTime)) {
-            return applyNightSurcharge(basePrice);
-        }
-        return basePrice;
+        double estimatedDistance = Math.max(1.0, basePrice / 1.5);
+        int estimatedDuration = (int) Math.max(5, estimatedDistance * 2); // Rough estimate
+
+        return calculatePrice(estimatedDistance, estimatedDuration, pickupTime, false, false);
     }
 
-    private boolean isNightTime(Date pickupTime) {
-        @SuppressWarnings("deprecation")
-        int hour = pickupTime.getHours();
-        return hour >= NIGHT_START_HOUR || hour < NIGHT_END_HOUR;
-    }
-
-    private double applyNightSurcharge(double basePrice) {
-        return basePrice * NIGHT_SURCHARGE_MULTIPLIER;
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 }

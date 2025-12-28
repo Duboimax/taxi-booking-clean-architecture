@@ -7,7 +7,6 @@ import com.taxibooking.dto.BookingResponse;
 import com.taxibooking.exceptions.BusinessException;
 import com.taxibooking.exceptions.ResourceNotFoundException;
 import com.taxibooking.models.Booking;
-
 import com.taxibooking.models.Customer;
 import com.taxibooking.models.Taxi;
 import com.taxibooking.repositories.BookingRepository;
@@ -39,7 +38,13 @@ public class BookingService {
         Customer customer = customerService.findCustomerById(request.getCustomerId());
 
         Date pickupTime = new Date(request.getPickupTime());
-        double calculatedPrice = pricingService.calculatePrice(taxi.getPrice(), pickupTime);
+        double calculatedPrice = pricingService.calculatePrice(
+                request.getDistanceKm(),
+                request.getDurationMinutes(),
+                pickupTime,
+                request.getFromAirport() != null && request.getFromAirport(),
+                request.getToAirport() != null && request.getToAirport()
+        );
 
         Booking booking = buildBooking(taxi, customer, pickupTime, calculatedPrice);
 
