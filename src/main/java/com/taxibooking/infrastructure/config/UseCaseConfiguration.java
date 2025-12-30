@@ -2,6 +2,7 @@ package com.taxibooking.infrastructure.config;
 
 import com.taxibooking.application.usecases.booking.*;
 import com.taxibooking.application.usecases.customer.*;
+import com.taxibooking.application.usecases.rating.*;
 import com.taxibooking.application.usecases.taxi.*;
 import com.taxibooking.domain.ports.repositories.BookingRepository;
 import com.taxibooking.domain.ports.repositories.CustomerRepository;
@@ -101,5 +102,21 @@ public class UseCaseConfiguration {
     @Bean
     public GetAllCustomersUseCase getAllCustomersUseCase(CustomerRepository customerRepository) {
         return new GetAllCustomersUseCase(customerRepository);
+    }
+
+    @Bean
+    public RateBookingUseCase rateBookingUseCase(
+            BookingRepository bookingRepository,
+            TaxiRepository taxiRepository,
+            CustomerRepository customerRepository) {
+        return new RateBookingUseCase(bookingRepository, taxiRepository, customerRepository);
+    }
+
+    @Bean
+    public GetTaxiRatingsUseCase getTaxiRatingsUseCase(
+            BookingRepository bookingRepository,
+            TaxiRepository taxiRepository,
+            CustomerRepository customerRepository) {
+        return new GetTaxiRatingsUseCase(bookingRepository, taxiRepository, customerRepository);
     }
 }

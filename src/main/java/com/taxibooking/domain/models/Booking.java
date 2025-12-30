@@ -19,6 +19,8 @@ public class Booking {
     private Boolean fromAirport;
     private Boolean toAirport;
 
+    private Rating rating;
+
     public Booking() {
         this.createdAt = LocalDateTime.now();
         this.notificationSent = false;
@@ -94,6 +96,34 @@ public class Booking {
 
     public boolean involvesAirport() {
         return Boolean.TRUE.equals(fromAirport) || Boolean.TRUE.equals(toAirport);
+    }
+
+    public boolean canBeRated() {
+        return this.status == BookingStatus.COMPLETED && this.rating == null;
+    }
+
+    public void rate(int stars, String comment) {
+        if (!canBeRated()) {
+            if (this.status != BookingStatus.COMPLETED) {
+                throw new IllegalStateException("Cannot rate a booking that is not completed");
+            }
+            if (this.rating != null) {
+                throw new IllegalStateException("Booking has already been rated");
+            }
+        }
+        this.rating = new Rating(stars, comment);
+    }
+
+    public boolean isRated() {
+        return this.rating != null;
+    }
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
 
 

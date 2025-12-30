@@ -42,6 +42,15 @@ public class BookingEntity {
     @Column(name = "to_airport")
     private Boolean toAirport;
 
+    @Column(name = "rating_stars")
+    private Integer ratingStars;
+
+    @Column(name = "rating_comment", length = 500)
+    private String ratingComment;
+
+    @Column(name = "rated_at")
+    private LocalDateTime ratedAt;
+
     public BookingEntity() {}
 
     public Long getId() { return id; }
@@ -79,4 +88,13 @@ public class BookingEntity {
 
     public Boolean getToAirport() { return toAirport; }
     public void setToAirport(Boolean toAirport) { this.toAirport = toAirport; }
+
+    public Integer getRatingStars() { return ratingStars; }
+    public void setRatingStars(Integer ratingStars) { this.ratingStars = ratingStars; }
+
+    public String getRatingComment() { return ratingComment; }
+    public void setRatingComment(String ratingComment) { this.ratingComment = ratingComment; }
+
+    public LocalDateTime getRatedAt() { return ratedAt; }
+    public void setRatedAt(LocalDateTime ratedAt) { this.ratedAt = ratedAt; }
 }

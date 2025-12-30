@@ -2,6 +2,7 @@ package com.taxibooking.infrastructure.persistence.mappers;
 
 import com.taxibooking.domain.models.Booking;
 import com.taxibooking.domain.models.BookingStatus;
+import com.taxibooking.domain.models.Rating;
 import com.taxibooking.infrastructure.persistence.entities.BookingEntity;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,12 @@ public class BookingMapper {
         entity.setFromAirport(domain.getFromAirport());
         entity.setToAirport(domain.getToAirport());
 
+        if (domain.getRating() != null) {
+            entity.setRatingStars(domain.getRating().getStars());
+            entity.setRatingComment(domain.getRating().getComment());
+            entity.setRatedAt(domain.getRating().getRatedAt());
+        }
+
         return entity;
     }
 
@@ -44,6 +51,15 @@ public class BookingMapper {
         domain.setDurationMinutes(entity.getDurationMinutes());
         domain.setFromAirport(entity.getFromAirport());
         domain.setToAirport(entity.getToAirport());
+
+        if (entity.getRatingStars() != null) {
+            Rating rating = new Rating(
+                    entity.getRatingStars(),
+                    entity.getRatingComment(),
+                    entity.getRatedAt()
+            );
+            domain.setRating(rating);
+        }
 
         return domain;
     }
