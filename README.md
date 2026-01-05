@@ -74,10 +74,9 @@ Le projet évoluera à travers plusieurs itérations :
 
 - **v0.0-initial** : Code MVC couplé (point de départ)
 - **v1.0-extract-business-logic** : Extraction de la logique métier
-- **v2.0-decouple-persistence** : Découplage de la persistance
-- **v3.0-use-cases-cqrs** : Introduction des Use Cases
-- **v4.0-hexagonal-architecture** : Architecture hexagonale
-- **v5.0-final-clean-architecture** : Architecture finale propre
+- **v2.0-tdd-pricing** : Mise en pratique du TDD
+- **v3.0-clean-architecture** : Mise en place de la clean architecture dans le projet
+- **v4.0-rating-feature** : Ajout de la features de note pour les taxis
 
 ## 🎓 Objectifs pédagogiques
 
@@ -94,9 +93,7 @@ Les étudiants apprendront à :
 - **Factory** - Création d'objets
 - **Repository** - Abstraction de persistance
 - **Adapter** - Ports & Adapters
-- **Observer/Event** - Notifications
-- **Command/Query (CQRS)** - Séparation lectures/écritures
-
+  
 ## 🐳 Docker
 ```bash
 # Démarrer la base de données
